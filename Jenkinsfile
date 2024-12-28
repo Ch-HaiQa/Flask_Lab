@@ -1,21 +1,29 @@
-pipeline {
+pipeline 
+{
     agent any
 
-    environment {
+    environment 
+    {
         VENV_PATH = "venv"  // Virtual environment directory
+        FLASK_APP = "app.py"  // Flask application entry point
     }
 
-    stages {
+    stages 
+    {
 
-        stage('Clone Repository') {
-            steps {
+        stage('Clone Repository') 
+        {
+            steps 
+            {
                 echo 'Cloning the repository...'
                 git branch: 'main', url: 'https://github.com/Ch-HaiQa/Flask_Lab.git'
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
+        stage('Install Dependencies') 
+        {
+            steps 
+            {
                 echo 'Setting up Python virtual environment and installing dependencies...'
                 sh '''
                     python3 -m venv $VENV_PATH
@@ -26,8 +34,10 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
-            steps {
+        stage('Run Unit Tests') 
+        {
+            steps 
+            {
                 echo 'Running unit tests with pytest...'
                 sh '''
                     source $VENV_PATH/bin/activate
@@ -35,42 +45,38 @@ pipeline {
                 '''
             }
 
-            post {
-                always {
+            post 
+            {
+                always 
+                {
                     junit 'results.xml'  // Archive test results
                 }
             }
         }
 
-        stage('Build Application') {
-            steps {
-                echo 'Building the Flask application...'
-                sh '''
-                    source $VENV_PATH/bin/activate
-                    python setup.py install
-                '''
-            }
-        }
-
-        stage('Deploy Application') {
-            steps {
+        stage('Deploy Application') 
+        {
+            steps 
+            {
                 echo 'Deploying the Flask application...'
                 sh '''
                     source $VENV_PATH/bin/activate
-                    export FLASK_APP=app.py  # Update this with your app's entry point
+                    export FLASK_APP=$FLASK_APP
                     export FLASK_ENV=production
-                    # Example deployment script: start the Flask app
                     nohup flask run --host=0.0.0.0 --port=8000 &
                 '''
             }
         }
     }
 
-    post {
-        success {
+    post 
+    {
+        success 
+        {
             echo 'Pipeline completed successfully!'
         }
-        failure {
+        failure 
+        {
             echo 'Pipeline failed. Check the logs for more details.'
         }
     }
