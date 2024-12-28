@@ -10,7 +10,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository...'
-                git branch: 'main', url: 'https://github.com/<your-username>/<your-repo>.git'
+                git branch: 'main', url: 'https://github.com/Ch-HaiQa/Flask_Lab.git'
             }
         }
 
@@ -57,6 +57,8 @@ pipeline {
                 echo 'Deploying the Flask application...'
                 sh '''
                     source $VENV_PATH/bin/activate
+                    export FLASK_APP=app.py  # Update this with your app's entry point
+                    export FLASK_ENV=production
                     # Example deployment script: start the Flask app
                     nohup flask run --host=0.0.0.0 --port=8000 &
                 '''
